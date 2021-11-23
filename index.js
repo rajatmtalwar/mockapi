@@ -1,8 +1,9 @@
 const express = require("express");
 const httpProxy = require("http-proxy");
-let mockData = require("./data/Mock");
+let mockData = require("./data/SampleMock");
 const config = require("./config/config.js");
 const app = express();
+const cors = require("cors");
 const port = config.httpServerPort || 80;
 const targetProxyHost = config.targetProxyHost;
 const enableProxyForward = config.enableProxyForward || false;
@@ -10,9 +11,12 @@ const proxy = enableProxyForward ? httpProxy.createProxyServer({}) : null;
 
 const mockDataFiles = config.mockDataFiles || [];
 
-proxy.on("error", function (e) {
-  console.log(e);
-});
+app.use(cors());
+
+proxy &&
+  proxy.on("error", function (e) {
+    console.log(e);
+  });
 
 mockDataFiles.forEach((filePath) => {
   try {

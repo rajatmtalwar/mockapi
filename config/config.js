@@ -1,6 +1,6 @@
 const config = {
   httpServerPort: 80,
-  enableProxyForward: true,
+  enableProxyForward: false,
   targetProxyHost: "http://localhost:8080",
   proxyRequestHeaders: [
     {
@@ -8,7 +8,7 @@ const config = {
       value: "https",
     },
   ],
-  mockDataFiles: ["./data/UserMock.js"], // Paths relative to index.js OR Absolute paths
+  mockDataFiles: ["./data/Mock.js"], // Paths relative to index.js OR Absolute paths
 };
 
 module.exports = config;

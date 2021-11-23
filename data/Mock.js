@@ -3,47 +3,50 @@ const getRestDataObject = function (data) {
     response: { errors: null, status: "SUCCESS", data: data, warnings: null },
   };
 };
+const getErrorRestDataObject = function (data, errors) {
+  return {
+    response: { errors: errors, status: "ERROR", data: data, warnings: null },
+  };
+};
 
-let mockData = [
+const mockData = [
   {
-    // http://localhost/Country?id=ind
+    // http://localhost/User?id=jc
     method: "get",
-    path: "/Country",
+    path: "/User",
     getResponse: function (req) {
       const id = req.query.id;
-      if (id !== "ind") {
-        return null;
+      if (id === "jc") {
+        const data = {
+          name: "Jim Corbett",
+          department: "User Experience",
+          capitalCity: "New Delhi",
+        };
+        return {
+          forwardRequest: false,
+          responseCode: 200,
+          responseDataObject: getRestDataObject(data),
+        };
       }
-      const data = {
-        countryName: "India",
-        alternateName: "Bharat",
-        capitalCity: "New Delhi",
-      };
+      const data = {};
       return {
+        // http://localhost/User?id=anything
         forwardRequest: false,
-        responseCode: 200,
-        responseDataObject: getRestDataObject(data),
+        responseCode: 500,
+        responseDataObject: getErrorRestDataObject(data, ["User not Found"]),
       };
     },
   },
   {
-    // http://localhost/State?id=pb
+    // http://localhost/Countries
     method: "get",
-    path: "/State",
+    path: "/Countries",
     getResponse: function (req) {
-      const id = req.query.id;
-      if (id !== "pb") {
-        return null;
-      }
-      const data = {
-        name: "Punjab",
-        alternateName: "Panjab",
-        capitalCity: "Chandigarh",
-      };
+      const data = require("./Countries.json");
       return {
         forwardRequest: false,
         responseCode: 200,
-        responseDataObject: getRestDataObject(data),
+        responseDataObject: data,
       };
     },
   },
